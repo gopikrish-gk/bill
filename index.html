@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webikrish - Client Billing System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 20px 0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: #6a11cb;
+            font-size: 24px;
+        }
+
+        .company-info h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .company-info p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 30px;
+        }
+
+        .form-section {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .preview-section {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: #2575fc;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #2575fc;
+            outline: none;
+        }
+
+        .invoice-items {
+            margin-top: 20px;
+        }
+
+        .item-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .item-row input, .item-row textarea {
+            flex: 1;
+        }
+
+        .item-row .quantity {
+            width: 80px;
+        }
+
+        .item-row .price {
+            width: 120px;
+        }
+
+        .btn {
+            background: #2575fc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #1a68e8;
+        }
+
+        .btn-add {
+            background: #4CAF50;
+            margin-top: 10px;
+        }
+
+        .btn-add:hover {
+            background: #45a049;
+        }
+
+        .btn-generate {
+            background: #6a11cb;
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+        }
+
+        .btn-generate:hover {
+            background: #5a0db3;
+        }
+
+        .invoice-preview {
+            background: white;
+            border: 1px solid #e0e0e0;
+            padding: 30px;
+            min-height: 500px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Webikrish Logo Watermark */
+        .watermark {
+            /* position: absolute; */
+            /* top: 0;
+            left: 0; */
+            /* width: 100%;
+            height: 100%; */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 0;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .watermark-content {
+            text-align: center;
+           
+            /* transform: rotate(-30deg); */
+        }
+
+        /* .watermark-logo {
+            font-size: 120px;
+            font-weight: bold;
+            color: #6a11cb;
+            margin-bottom: 10px;
+        }
+
+        .watermark-text {
+            font-size: 36px;
+            color: #2575fc;
+            font-weight: 300;
+            letter-spacing: 2px;
+        } */
+
+        .invoice-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .invoice-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .invoice-title {
+            font-size: 28px;
+            color: #333;
+            text-align: right;
+        }
+
+        .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .from-details, .to-details {
+            flex: 1;
+        }
+
+        .invoice-id {
+            text-align: right;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .invoice-table th {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .invoice-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .invoice-total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .payment-summary {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .payment-summary p {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .payment-summary .remaining {
+            font-weight: bold;
+            color: #e74c3c;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .payment-summary .paid {
+            color: #27ae60;
+        }
+
+        .signature-area {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature-box {
+            width: 200px;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+            text-align: center;
+        }
+
+        .signature-image {
+            height: 60px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .paid-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 80px;
+            color: rgba(76, 175, 80, 0.2);
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 10;
+            border: 8px solid rgba(76, 175, 80, 0.2);
+            padding: 30px;
+            border-radius: 50%;
+            display: none;
+        }
+
+        .payment-info {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .payment-info .form-group {
+            flex: 1;
+        }
+
+        .digital-signature-note {
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .advanced-payment {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .invoice-details {
+                flex-direction: column;
+            }
+            
+            .from-details, .to-details {
+                margin-bottom: 20px;
+            }
+
+            .payment-info {
+                flex-direction: column;
+            }
+
+            .watermark-logo {
+                font-size: 80px;
+            }
+
+            .watermark-text {
+                font-size: 24px;
+            }
+        }
+
+        @media print {
+            .watermark {
+                opacity: 0.05;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">W</div>
+                    <div class="company-info">
+                        <h1>Webikrish</h1>
+                        <p>YOUR DIGITAL GROWTH PARTNER</p>
+                    </div>
+                </div>
+                <div>
+                    <p>Client Billing System</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <section class="form-section">
+                <h2>Bill Information</h2>
+                
+                <div class="form-group">
+                    <label for="billId">Bill ID</label>
+                    <input type="text" id="billId" placeholder="Enter Bill ID">
+                </div>
+                
+                <div class="form-group">
+                    <label for="billDate">Bill Date</label>
+                    <input type="date" id="billDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="billTime">Bill Time</label>
+                    <input type="time" id="billTime">
+                </div>
+                
+                <h2>Client Information</h2>
+                
+                <div class="form-group">
+                    <label for="clientName">Client Name</label>
+                    <input type="text" id="clientName" placeholder="Enter Client Name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientAddress">Client Address</label>
+                    <textarea id="clientAddress" rows="3" placeholder="Enter Client Address"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientMobile">Client Mobile Number</label>
+                    <input type="text" id="clientMobile" placeholder="Enter Client Mobile Number">
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalInfo">Additional Information</label>
+                    <textarea id="additionalInfo" rows="2" placeholder="Any additional notes or information"></textarea>
+                </div>
+                
+                <h2>Payment Information</h2>
+                
+                <div class="payment-info">
+                    <div class="form-group">
+                        <label for="paymentMethod">Payment Method</label>
+                        <select id="paymentMethod">
+                            <option value="">Select Payment Method</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="Debit Card">Debit Card</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentStatus">Payment Status</label>
+                        <select id="paymentStatus">
+                            <option value="Pending">Pending</option>
+                            <option value="Partial">Partial</option>
+                            <option value="Paid">Paid</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="advanced-payment">
+                    <h3>Advanced Payment</h3>
+                    <div class="form-group">
+                        <label for="advancedAmount">Advanced Amount (₹)</label>
+                        <input type="number" id="advancedAmount" placeholder="Enter advanced amount" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="advancedMode">Advanced Payment Mode</label>
+                        <select id="advancedMode">
+                            <option value="">Select Payment Mode</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Cash">Cash</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Credit Card">Credit Card</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <h2>Services / Items</h2>
+                
+                <div class="invoice-items">
+                    <div class="item-row">
+                        <textarea class="description" placeholder="Description"></textarea>
+                        <input type="number" class="quantity" placeholder="Qty" min="1" value="1">
+                        <input type="number" class="price" placeholder="Price" min="0" step="0.01">
+                    </div>
+                </div>
+                
+                <button class="btn btn-add" id="addItem">+ Add Item</button>
+                
+                <button class="btn btn-generate" id="generateBill">Generate Bill</button>
+            </section>
+            
+            <section class="preview-section">
+                <h2>Bill Preview</h2>
+                
+                <div class="invoice-preview" id="invoicePreview">
+                    <!-- Webikrish Watermark -->
+                    <div class="watermark">
+                        <div class="watermark-content">
+                            <div class="watermark-logo"><img src="" alt=""></div>
+                            <div class="watermark-text">YOUR DIGITAL GROWTH PARTNER</div>
+                        </div>
+                    </div>
+                    
+                    <div class="paid-seal" id="paidSeal">PAID</div>
+                    
+                    <div class="invoice-content">
+                        <div class="invoice-header">
+                            <div class="invoice-logo">Webikrish</div>
+                            <div class="invoice-title">INVOICE</div>
+                        </div>
+                        
+                        <div class="invoice-id">
+                            Bill ID: <span id="previewBillId">WEB-001</span>
+                        </div>
+                        
+                        <div class="invoice-details">
+                            <div class="from-details">
+                                <h3>From:</h3>
+                                <p><strong>Webikrish</strong></p>
+                                <p>123 Tech Park, Innovation Road</p>
+                                <p>Chennai, Tamil Nadu 600001</p>
+                                <p>Mobile: +91 98765 43210</p>
+                                <p>Email: info@webikrish.com</p>
+                            </div>
+                            
+                            <div class="to-details">
+                                <h3>To:</h3>
+                                <p id="previewClientName">Client Name</p>
+                                <p id="previewClientAddress">Client Address</p>
+                                <p id="previewClientMobile">Client Mobile</p>
+                            </div>
+                        </div>
+                        
+                        <div class="invoice-date">
+                            <p><strong>Date:</strong> <span id="previewBillDate">01/01/2023</span></p>
+                            <p><strong>Time:</strong> <span id="previewBillTime">10:00 AM</span></p>
+                        </div>
+
+                        <div class="additional-info">
+                            <p><strong>Additional Information:</strong> <span id="previewAdditionalInfo">-</span></p>
+                        </div>
+                        
+                        <table class="invoice-table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="previewItems">
+                                <tr>
+                                    <td>Web Development Service</td>
+                                    <td>1</td>
+                                    <td>₹15,000.00</td>
+                                    <td>₹15,000.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="payment-summary">
+                            <p>Total Amount: <span id="previewTotal">₹15,000.00</span></p>
+                            <p class="paid">Advanced Paid: <span id="previewAdvanced">₹0.00</span> (<span id="previewAdvancedMode">-</span>)</p>
+                            <p class="remaining">Remaining Balance: <span id="previewRemaining">₹15,000.00</span></p>
+                            <p>Payment Method: <span id="previewPaymentMethod">Bank Transfer</span></p>
+                            <p>Payment Status: <span id="previewPaymentStatus">Pending</span></p>
+                        </div>
+                        
+                        <div class="signature-area">
+                            <div class="signature-box">
+                                <p>Client Signature</p>
+                            </div>
+                            <div class="signature-box">
+                                <div class="signature-image">
+                                    <!-- Signature will be inserted here -->
+                                    <div style="font-size: 40px; color: #6a11cb;">[φ.⨁π]</div>
+                                </div>
+                                <p>Authorized Signature</p>
+                                <p>(Webikrish)</p>
+                                <p class="digital-signature-note">Digitally Verified Signature</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-generate" id="printBill" style="margin-top: 20px;">Print Bill</button>
+            </section>
+        </div>
+        
+        <footer>
+            <p>Webikrish &copy; 2023 | YOUR DIGITAL GROWTH PARTNER</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date and time as default
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            const time = now.toTimeString().split(' ')[0].substring(0, 5);
+            
+            document.getElementById('billDate').value = today;
+            document.getElementById('billTime').value = time;
+            document.getElementById('previewBillDate').textContent = formatDate(today);
+            document.getElementById('previewBillTime').textContent = formatTime(time);
+            
+            // Generate a default bill ID
+            document.getElementById('billId').value = 'WEB-' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('previewBillId').textContent = document.getElementById('billId').value;
+            
+            // Add item row
+            document.getElementById('addItem').addEventListener('click', function() {
+                const itemsContainer = document.querySelector('.invoice-items');
+                const newRow = document.createElement('div');
+                newRow.className = 'item-row';
+                newRow.innerHTML = `
+                    <textarea class="description" placeholder="Description"></textarea>
+                    <input type="number" class="quantity" placeholder="Qty" min="1" value="1">
+                    <input type="number" class="price" placeholder="Price" min="0" step="0.01">
+                `;
+                itemsContainer.appendChild(newRow);
+            });
+            
+            // Generate bill
+            document.getElementById('generateBill').addEventListener('click', function() {
+                // Update client details
+                document.getElementById('previewClientName').textContent = 
+                    document.getElementById('clientName').value || 'Client Name';
+                document.getElementById('previewClientAddress').textContent = 
+                    document.getElementById('clientAddress').value || 'Client Address';
+                document.getElementById('previewClientMobile').textContent = 
+                    document.getElementById('clientMobile').value || 'Client Mobile';
+                
+                // Update additional information
+                document.getElementById('previewAdditionalInfo').textContent = 
+                    document.getElementById('additionalInfo').value || '-';
+                
+                // Update bill details
+                document.getElementById('previewBillId').textContent = 
+                    document.getElementById('billId').value;
+                document.getElementById('previewBillDate').textContent = 
+                    formatDate(document.getElementById('billDate').value);
+                document.getElementById('previewBillTime').textContent = 
+                    formatTime(document.getElementById('billTime').value);
+                
+                // Update payment information
+                document.getElementById('previewPaymentMethod').textContent = 
+                    document.getElementById('paymentMethod').value || 'Not Specified';
+                document.getElementById('previewPaymentStatus').textContent = 
+                    document.getElementById('paymentStatus').value;
+                
+                // Update advanced payment information
+                const advancedAmount = parseFloat(document.getElementById('advancedAmount').value) || 0;
+                const advancedMode = document.getElementById('advancedMode').value || 'Not Specified';
+                document.getElementById('previewAdvanced').textContent = `₹${advancedAmount.toFixed(2)}`;
+                document.getElementById('previewAdvancedMode').textContent = advancedMode;
+                
+                // Update items
+                const itemRows = document.querySelectorAll('.item-row');
+                const previewItems = document.getElementById('previewItems');
+                previewItems.innerHTML = '';
+                
+                let total = 0;
+                
+                itemRows.forEach(row => {
+                    const description = row.querySelector('.description').value || 'Service';
+                    const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+                    const price = parseFloat(row.querySelector('.price').value) || 0;
+                    const amount = quantity * price;
+                    
+                    total += amount;
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${description}</td>
+                        <td>${quantity}</td>
+                        <td>₹${price.toFixed(2)}</td>
+                        <td>₹${amount.toFixed(2)}</td>
+                    `;
+                    previewItems.appendChild(tr);
+                });
+                
+                // Update total and calculate remaining balance
+                document.getElementById('previewTotal').textContent = `₹${total.toFixed(2)}`;
+                const remaining = total - advancedAmount;
+                document.getElementById('previewRemaining').textContent = `₹${remaining.toFixed(2)}`;
+                
+                // Show/hide paid seal
+                const paymentStatus = document.getElementById('paymentStatus').value;
+                const paidSeal = document.getElementById('paidSeal');
+                if (paymentStatus === 'Paid') {
+                    paidSeal.style.display = 'block';
+                } else {
+                    paidSeal.style.display = 'none';
+                }
+            });
+            
+            // Print bill
+            document.getElementById('printBill').addEventListener('click', function() {
+                const invoiceContent = document.getElementById('invoicePreview').innerHTML;
+                const originalContent = document.body.innerHTML;
+                
+                document.body.innerHTML = invoiceContent;
+                window.print();
+                document.body.innerHTML = originalContent;
+                location.reload();
+            });
+            
+            // Helper function to format date
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString('en-IN', options);
+            }
+            
+            // Helper function to format time
+            function formatTime(timeString) {
+                const [hours, minutes] = timeString.split(':');
+                const hour = parseInt(hours);
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                const formattedHour = hour % 12 || 12;
+                return `${formattedHour}:${minutes} ${ampm}`;
+            }
+        });
+    </script>
+</body>
+</html>
