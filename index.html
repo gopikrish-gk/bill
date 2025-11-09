@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webikrish - Client Billing System</title>
     <style>
-        /* Your existing CSS remains the same */
         * {
             margin: 0;
             padding: 0;
@@ -58,6 +57,7 @@
             font-weight: bold;
             color: #6a11cb;
             font-size: 24px;
+            object-fit: cover;
         }
 
         .company-info h1 {
@@ -121,6 +121,7 @@
         input:focus, textarea:focus, select:focus {
             border-color: #2575fc;
             outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 117, 252, 0.2);
         }
 
         .invoice-items {
@@ -131,18 +132,26 @@
             display: flex;
             gap: 10px;
             margin-bottom: 15px;
+            align-items: flex-start;
         }
 
         .item-row input, .item-row textarea {
             flex: 1;
         }
 
+        .item-row .description {
+            min-height: 80px;
+            resize: vertical;
+        }
+
         .item-row .quantity {
             width: 80px;
+            flex: none;
         }
 
         .item-row .price {
             width: 120px;
+            flex: none;
         }
 
         .btn {
@@ -154,11 +163,16 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn:hover {
             background: #1a68e8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-add {
@@ -179,17 +193,6 @@
 
         .btn-generate:hover {
             background: #5a0db3;
-        }
-        
-        .btn-download {
-            background: #e74c3c;
-            width: 100%;
-            margin-top: 10px;
-            padding: 15px;
-        }
-        
-        .btn-download:hover {
-            background: #c0392b;
         }
 
         .invoice-preview {
@@ -245,6 +248,7 @@
         .invoice-header {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 30px;
         }
 
@@ -264,6 +268,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 30px;
+            gap: 20px;
         }
 
         .from-details, .to-details {
@@ -275,6 +280,10 @@
             margin-bottom: 20px;
             font-weight: bold;
             color: #555;
+        }
+
+        .invoice-date, .additional-info {
+            margin-bottom: 15px;
         }
 
         .invoice-table {
@@ -293,6 +302,10 @@
         .invoice-table td {
             padding: 12px 15px;
             border-bottom: 1px solid #e0e0e0;
+        }
+
+        .invoice-table tbody tr:last-child td {
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .invoice-total {
@@ -330,6 +343,7 @@
             margin-top: 50px;
             display: flex;
             justify-content: space-between;
+            align-items: flex-end;
         }
 
         .signature-box {
@@ -400,39 +414,119 @@
             font-size: 14px;
         }
 
-        /* Print Styles */
+        /* Form validation styles */
+        .error {
+            border-color: #e74c3c !important;
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2) !important;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Print Styles - Optimized for A4 paper */
         @media print {
             body * {
                 visibility: hidden;
+                margin: 0;
+                padding: 0;
             }
+            
             .invoice-preview, .invoice-preview * {
                 visibility: visible;
             }
+            
             .invoice-preview {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
+                height: 100%;
                 padding: 15px;
                 margin: 0;
                 box-shadow: none;
                 border: none;
+                font-size: 12px;
+                line-height: 1.2;
             }
+            
             .watermark {
                 opacity: 0.05;
             }
+            
             .btn, .form-section, header, footer {
                 display: none !important;
             }
+            
             .invoice-preview {
                 page-break-after: avoid;
                 page-break-inside: avoid;
             }
+            
+            /* Optimize for A4 paper */
+            @page {
+                size: A4;
+                margin: 0.5cm;
+            }
+            
+            /* Adjust font sizes for print */
+            .invoice-title {
+                font-size: 20px;
+            }
+            
+            .invoice-logo {
+                font-size: 18px;
+            }
+            
+            .invoice-table th, 
+            .invoice-table td {
+                padding: 6px 8px;
+                font-size: 11px;
+            }
+            
+            .payment-summary {
+                padding: 10px;
+                font-size: 11px;
+            }
+            
+            .signature-area {
+                margin-top: 20px;
+            }
+            
+            .signature-box {
+                width: 150px;
+            }
+            
+            .watermark-logo {
+                font-size: 80px;
+            }
+            
+            .watermark-text {
+                font-size: 24px;
+            }
         }
 
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
             .main-content {
                 flex-direction: column;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .logo-container {
+                justify-content: center;
             }
             
             .invoice-details {
@@ -463,6 +557,61 @@
             .signature-box {
                 width: 100%;
             }
+            
+            .item-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .item-row .quantity, 
+            .item-row .price {
+                width: 100%;
+            }
+            
+            .invoice-preview {
+                padding: 15px;
+            }
+            
+            .invoice-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .invoice-title {
+                text-align: center;
+            }
+            
+            .invoice-id {
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .form-section, .preview-section {
+                padding: 15px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .invoice-preview {
+                padding: 10px;
+            }
+            
+            .watermark-logo {
+                font-size: 60px;
+            }
+            
+            .watermark-text {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -471,7 +620,7 @@
         <header>
             <div class="header-content">
                 <div class="logo-container">
-                    <div class="logo"><img src="WhatsApp Image 2025-11-09 at 20.34.30_0ac88b47.jpg" alt=""></div>
+                    <div class="logo"><img src="WhatsApp Image 2025-11-09 at 20.34.30_0ac88b47.jpg" alt="Webikrish Logo"></div>
                     <div class="company-info">
                         <h1>Webikrish</h1>
                         <p>YOUR DIGITAL GROWTH PARTNER</p>
@@ -490,6 +639,7 @@
                 <div class="form-group">
                     <label for="billId">Bill ID</label>
                     <input type="text" id="billId" placeholder="Enter Bill ID">
+                    <div class="error-message" id="billIdError">Please enter a valid Bill ID</div>
                 </div>
                 
                 <div class="form-group">
@@ -507,6 +657,7 @@
                 <div class="form-group">
                     <label for="clientName">Client Name</label>
                     <input type="text" id="clientName" placeholder="Enter Client Name">
+                    <div class="error-message" id="clientNameError">Please enter client name</div>
                 </div>
                 
                 <div class="form-group">
@@ -665,6 +816,7 @@
                         <div class="signature-area">
                             <div class="signature-box">
                                 <br>
+                                <p>_________________________</p>
                                 <p>Client Signature</p>
                             </div>
                             <div class="signature-box">
@@ -672,6 +824,7 @@
                                     <!-- Signature will be inserted here -->
                                     <img src="1000186179-removebg-preview.png" alt="Authorized Signature">
                                 </div>
+                                <p>_________________________</p>
                                 <p>Authorized Signature</p>
                                 <p>(GOPI KRISHNAN K)</p>
                                 <p class="digital-signature-note">Digitally Verified Signature</p>
@@ -681,7 +834,6 @@
                 </div>
                 
                 <button class="btn btn-generate" id="printBill" style="margin-top: 20px;">Print Bill</button>
-                <button class="btn btn-download" id="downloadPDF">Download PDF</button>
             </section>
         </div>
         
@@ -689,9 +841,6 @@
             <p>Webikrish &copy; 2023 | YOUR DIGITAL GROWTH PARTNER</p>
         </footer>
     </div>
-
-    <!-- Include html2pdf library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -724,6 +873,32 @@
             
             // Generate bill
             document.getElementById('generateBill').addEventListener('click', function() {
+                // Validate required fields
+                let isValid = true;
+                
+                if (!document.getElementById('billId').value.trim()) {
+                    document.getElementById('billId').classList.add('error');
+                    document.getElementById('billIdError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('billId').classList.remove('error');
+                    document.getElementById('billIdError').style.display = 'none';
+                }
+                
+                if (!document.getElementById('clientName').value.trim()) {
+                    document.getElementById('clientName').classList.add('error');
+                    document.getElementById('clientNameError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('clientName').classList.remove('error');
+                    document.getElementById('clientNameError').style.display = 'none';
+                }
+                
+                if (!isValid) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
                 // Update client details
                 document.getElementById('previewClientName').textContent = 
                     document.getElementById('clientName').value || 'Client Name';
@@ -753,7 +928,7 @@
                 // Update advanced payment information
                 const advancedAmount = parseFloat(document.getElementById('advancedAmount').value) || 0;
                 const advancedMode = document.getElementById('advancedMode').value || 'Not Specified';
-                document.getElementById('previewAdvanced').textContent = `₹${advancedAmount.toFixed(2)}`;
+                document.getElementById('previewAdvanced').textContent = `₹${formatCurrency(advancedAmount)}`;
                 document.getElementById('previewAdvancedMode').textContent = advancedMode;
                 
                 // Update items
@@ -775,16 +950,16 @@
                     tr.innerHTML = `
                         <td>${description}</td>
                         <td>${quantity}</td>
-                        <td>₹${price.toFixed(2)}</td>
-                        <td>₹${amount.toFixed(2)}</td>
+                        <td>₹${formatCurrency(price)}</td>
+                        <td>₹${formatCurrency(amount)}</td>
                     `;
                     previewItems.appendChild(tr);
                 });
                 
                 // Update total and calculate remaining balance
-                document.getElementById('previewTotal').textContent = `₹${total.toFixed(2)}`;
+                document.getElementById('previewTotal').textContent = `₹${formatCurrency(total)}`;
                 const remaining = total - advancedAmount;
-                document.getElementById('previewRemaining').textContent = `₹${remaining.toFixed(2)}`;
+                document.getElementById('previewRemaining').textContent = `₹${formatCurrency(remaining)}`;
                 
                 // Show/hide paid seal
                 const paymentStatus = document.getElementById('paymentStatus').value;
@@ -794,38 +969,14 @@
                 } else {
                     paidSeal.style.display = 'none';
                 }
+                
+                // Show success message
+                alert('Bill generated successfully!');
             });
             
-            // Print bill - SIMPLIFIED VERSION
+            // Print bill
             document.getElementById('printBill').addEventListener('click', function() {
                 window.print();
-            });
-            
-            // Download PDF - SIMPLIFIED VERSION
-            document.getElementById('downloadPDF').addEventListener('click', function() {
-                const element = document.getElementById('invoicePreview');
-                
-                // Simple and reliable PDF configuration
-                const options = {
-                    margin: 10,
-                    filename: `Webikrish-Bill-${document.getElementById('billId').value}.pdf`,
-                    image: { 
-                        type: 'jpeg', 
-                        quality: 0.98 
-                    },
-                    html2canvas: { 
-                        scale: 2,
-                        useCORS: true
-                    },
-                    jsPDF: { 
-                        unit: 'mm', 
-                        format: 'a4', 
-                        orientation: 'portrait' 
-                    }
-                };
-                
-                // Generate PDF
-                html2pdf().set(options).from(element).save();
             });
             
             // Helper function to format date
@@ -843,6 +994,11 @@
                 const ampm = hour >= 12 ? 'PM' : 'AM';
                 const formattedHour = hour % 12 || 12;
                 return `${formattedHour}:${minutes} ${ampm}`;
+            }
+            
+            // Helper function to format currency
+            function formatCurrency(amount) {
+                return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
             }
         });
     </script>
